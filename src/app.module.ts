@@ -1,6 +1,7 @@
 import * as Joi from '@hapi/joi';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { SocketioModule } from './socketio/socketio.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ConfigModule } from '@nestjs/config';
         NESTJS_PORT: Joi.number().default(5031),
       }),
     }),
+    SocketioModule,
   ],
   controllers: [],
   providers: [],
