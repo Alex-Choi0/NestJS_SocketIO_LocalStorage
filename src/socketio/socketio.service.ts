@@ -20,6 +20,7 @@ export class SocketioService {
     console.log('service create : ', message);
     console.log('service create(room) : ', createSocketioDto.room);
     this.room[createSocketioDto.room].push(message);
+    console.log("모든 대화내용 : ", this.room[createSocketioDto.room]);
     return message;
   }
 
@@ -37,5 +38,19 @@ export class SocketioService {
     this.client[id] = user;
     console.log('Current Room user :', this.client);
     return Object.values(this.client);
+  }
+
+  getAllUser(){
+    return this.client
+  }
+
+  getClientInfo(id : string){
+    return this.client[id];
+  }
+
+  disconnectUser(id : string){
+    delete this.client[id];
+    console.log("left client : ", this.client);
+    return this.client;
   }
 }
