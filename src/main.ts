@@ -43,6 +43,7 @@ async function bootstrap() {
      처음 접속시 유저 이름을 정해야 합니다. 이후 유저 이름과 해당 클라이언트 id를 갖이 저장하여 채팅글을 띄워줍니다.
     - Sample로 제작한 Vue프로그램이 있습니다. 간단하게 현재 서버를 이용하여 테스트를 할수 있습니다. 해당 Vue프로그램은 socket url을 해당 서버에 맞춰야 합니다. ex : http://localhost:5031
     gitHub주소 : https://github.com/Alex-Choi0/Test_SocketIO_Vue.git
+    branch : select_room
     `,
     )
     .addBearerAuth()

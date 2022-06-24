@@ -26,27 +26,32 @@ export class SocketioGateway {
     @ConnectedSocket() client: Socket,
   ) {
     console.log('SubscribeMessage(createSocketio) : ', client.id);
+    console.log('SubscribeMessage(createSocketio) room : ', createSocketioDto);
     const message = this.socketioService.create(createSocketioDto, client.id);
 
-    this.server.emit('message', message);
+    this.server.emit(createSocketioDto.room, message);
     console.log("emit to server 'message' : ", message);
 
     return message;
   }
 
   @SubscribeMessage('findAllSocketio')
-  findAll(@ConnectedSocket() client: Socket) {
-    const res = this.socketioService.findAll();
+  findAll(
+    @ConnectedSocket() client: Socket,
+    @MessageBody('room') room: string,
+  ) {
+    const res = this.socketioService.findAll(room);
     console.log(`Client ${client.id} request all the chat data`);
-    return this.socketioService.findAll();
+    return res;
   }
 
   @SubscribeMessage('join')
   joinRoom(
     @MessageBody('user') user: string,
+    @MessageBody('room') room: string,
     @ConnectedSocket() client: Socket,
   ) {
     console.log(`${user}(${client.id}) join to the Chat Room`);
-    return this.socketioService.joinRoom(user, client.id);
+    return this.socketioService.joinRoom(room, user, client.id);
   }
 }
