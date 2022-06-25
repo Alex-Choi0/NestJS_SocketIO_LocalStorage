@@ -2,6 +2,7 @@ import * as Joi from '@hapi/joi';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SocketioModule } from './socketio/socketio.module';
+import { RestApiModule } from './rest-api/rest-api.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { SocketioModule } from './socketio/socketio.module';
       }),
     }),
     SocketioModule,
+    RestApiModule,
   ],
   controllers: [],
   providers: [],
