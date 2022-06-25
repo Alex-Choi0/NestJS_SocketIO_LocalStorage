@@ -36,7 +36,7 @@ async function bootstrap() {
     .setDescription(
       `
     소켓IO테스트를 위한 서버
-    - 간단한 소켓IO테스트 서버입니다. 향후 Playin_RPG의 데이터를 받을수 있는지 확인하기 위한 테스트 서버 입니다.
+    - 간단한 소켓IO테스트 서버입니다.
 
     테스트 방법
     - 디폴트 포트는 5031입니다.
