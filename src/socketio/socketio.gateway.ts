@@ -1,3 +1,4 @@
+// src/socketio/socketio.gateway.ts
 import {
   ConnectedSocket,
   MessageBody,
@@ -9,6 +10,7 @@ import { Server, Socket } from 'socket.io';
 import { CreateSocketioDto } from './dto/create-socketio.dto';
 import { SocketioService } from './socketio.service';
 
+// Cors에러 방지
 @WebSocketGateway({
   cors: {
     origin: '*',
@@ -16,30 +18,18 @@ import { SocketioService } from './socketio.service';
 })
 export class SocketioGateway {
   @WebSocketServer()
-  server: Server;
-  msg = {
-    name: 'NestJS-SocketIO',
-    time: new Date().toISOString(),
-    text: 'Starting SocketIO Communication',
-  };
+  server: Server; // 서버 셋팅
   constructor(private readonly socketioService: SocketioService) {}
 
+  // SocketIO Controller 로직
   @SubscribeMessage('createSocketio')
+  // 유저가 메세지 생성시
   async create(
     @MessageBody() createSocketioDto: CreateSocketioDto,
     @ConnectedSocket() client: Socket,
   ) {
-    console.log('SubscribeMessage(createSocketio) : ', client.id);
-    console.log('SubscribeMessage(createSocketio) room : ', createSocketioDto);
-    // console.log('server soketId : ', this.server.sockets.sockets.entries())
     const message = this.socketioService.create(createSocketioDto, client.id);
-    console.log(
-      `${client.id} : ${this.socketioService.getClientInfo(client.id)}`,
-    );
     this.server.emit(createSocketioDto.room, message);
-    // 특정 클라이언트만 메세지를 보낸다.
-    // this.server.to(client.id).emit(createSocketioDto.room,this.msg)
-    console.log("emit to server 'message' : ", message);
 
     return message;
   }
@@ -61,12 +51,15 @@ export class SocketioGateway {
     @ConnectedSocket() client: Socket,
   ) {
     console.log(`${user}(${client.id}) join to the Chat Room`);
+
+    // Client가 접속이 종료될시 동작
     client.on('disconnect', () => {
       const disconnectMsg = {
         name: 'server',
         time: new Date().toISOString(),
         text: `user(${client.id}) ${user} has been disconnected`,
       };
+      // Client의 접속 종료를 해당 방에 메세지로 올린다.
       this.server.emit(room, disconnectMsg);
       this.socketioService.disconnectUser(client.id, disconnectMsg);
     });
@@ -75,11 +68,8 @@ export class SocketioGateway {
       time: new Date().toISOString(),
       text: `user ${user}(${client.id}) has join the game`,
     };
-
+    // Client의 접속을 해당 방에 메세지로 올린다.
     this.server.emit(room, joinMsg);
-    // client.join(room);
     return this.socketioService.joinRoom(room, user, client.id, joinMsg);
   }
-
-  sendOneUser(client: string, room: string) {}
 }
